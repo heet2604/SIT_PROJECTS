@@ -1,12 +1,15 @@
 #include <iostream>
+#include<windows.h>
 #include <string>
 
 using namespace std;
 
 class User {
+protected:
+string password;//
 public:
     string username;
-    string password;//
+    
     string userID;
     string email;//
     long int phNO;//
@@ -15,6 +18,9 @@ public:
     string tenanttype;//
     
     User() {};
+    User (string name){
+        this->name=name;        //when a user only wants to register and not use the app functionality
+    }
 
     User(string name, string email, long int phNO, string location, string password, string tenanttype, string username )
         : name(name), email(email), phNO(phNO), location(location), password(password), tenanttype(tenanttype) , username(username){
@@ -35,7 +41,7 @@ public:
         getline(cin, location);
     }
 
-    void displayProfile() {
+    void displayProfile() {     //displays user profile
         cout << "Name: " << name << endl;
         cout << "Location: " << location << endl;
         cout << "Email: " << email << endl;
@@ -44,7 +50,7 @@ public:
     }
 };
 
-class Tenant : public User {
+class Tenant : public User {    //inherits from user class and has extra vriables 
 public:
     int budget;
     int no_of_rooms;
@@ -58,14 +64,14 @@ public:
         this->name=name;
         this->email=email;
         this->phNO=phNO;
-        this->location=location;
+        this->location=location;        //constructor
         this->budget=budget;
         this->no_of_rooms=no_of_rooms;
         this->tenanttype=tenanttype;
 
     }
 
-    void displayTenantProfile() {
+    void displayTenantProfile() {       //displays tenant profile while also using display profile from user
         displayProfile();
         cout << "Budget: " << budget << endl;
         cout << "No. of rooms: " << no_of_rooms << endl;
@@ -76,26 +82,26 @@ public:
     }
 };
 
-class Owner : public User {
+class Owner : public User {         //inherits from user class
 public:
     int no_properties;
     string tenant_type;
     string owner_name;
     string owner_id;
 
-    Owner() {};
+    Owner() {}; //default constructor
 
     Owner(int no_properties, string tenant_type, string owner_name, string owner_id, string email, long long phNO, string location){
         this->no_properties=no_properties;
         this->tenant_type=tenant_type;
         this->owner_name=owner_name;
-        this->owner_id=owner_id;
+        this->owner_id=owner_id;        //parametrized constructor
         this->email=email;
         this->phNO=phNO;
         this->location=location;
     };
 
-    void displayOwnerProfile() {
+    void displayOwnerProfile() {        //displays profile while also using display profile
         name=owner_name;
         displayProfile();
         
@@ -106,9 +112,12 @@ public:
         cout<<"----------------------------------------------------------------------------------------------------------";
         cout<<endl<<endl;
     }
+
+
+    
 };
 
-class Property {
+class Property {        //creates a property class 
 public:
     int no_rooms;
     int no_bathrooms;
@@ -120,11 +129,13 @@ public:
     int price;
     Owner owner_property;
 
+    Property(){};
+
     Property(int no_rooms, int no_bathrooms, string name, string location, int price, string facing, Owner owner_property, string property_type, string finishing)
         : no_rooms(no_rooms), no_bathrooms(no_bathrooms), name(name), location(location), price(price), facing(facing), owner_property(owner_property), property_type(property_type), finishing(finishing) {
     }
 
-    void displayProperty() {
+    void displayProperty() {                                    //displays property
         cout << "Name of the property: " << name << endl;
         cout << "No. of rooms: " << no_rooms << endl;
         cout << "Location of the property: " << location << endl;
@@ -135,11 +146,42 @@ public:
         cout<<"-----------------------------------------------------------------------------------------------------------------";
         cout<<endl<<endl;
     }
+
+
+    void getproperty(){
+        Property(p);
+        cout<<"Enter number of rooms";
+        cin>>p.no_rooms;
+        cout<<"Enter number of bathrooms\n";
+        cin>>p.no_rooms;
+        cout<<"Enter name of property\n";
+        getline(cin,p.name);
+        cout<<"Enter location of property\n";
+        getline(cin,p.location);
+        cout<<"Enter price of property\n";
+        cin>>p.price;
+        cout<<"Enter facing of property\n";
+        getline(cin,p.facing);
+        cout<<"Enter Property Type";
+        getline(cin, p.property_type);
+        cout<<"Enter Finishing";
+        getline(cin, p.finishing);
+
+    }
+
+
+
+    
 };
 
 bool compareInquiry(const Tenant& t, const Property& p) {
-    return (t.no_of_rooms == p.no_rooms && t.location == p.location && t.budget == p.price);
+    return (t.no_of_rooms == p.no_rooms && t.location == p.location && t.budget <= p.price);
 }
+
+
+
+
+
 
 int main() {
     cout << " ====================================== WELCOME TO TENANT/ OWNER FINDER ========================================\n\n";
@@ -157,7 +199,7 @@ int main() {
         Owner o10= Owner(3, "Individual", "Jack", "2010", "jack@email.com", 3333333333, "Location10");
 
         
-        Owner owners[10] = {o1,o2,o3,o4,o5,o6,o7,o8,o9,o10};
+        Owner owners[30] = {o1,o2,o3,o4,o5,o6,o7,o8,o9,o10};
 
     
 
@@ -173,7 +215,7 @@ int main() {
         Property p9=Property(1, 1, "Studio Apartment", "Downtown", 75000, "West", owners[8], "Apartment", "Modern");
         Property p10=Property(3, 2, "Lakeside Cottage", "Lakefront", 220000, "North", owners[9], "House", "Rustic");
 
-        Property properties[10]={p1,p2,p3,p4,p5,p6,p7,p8,p9,p10};
+        Property properties[20]={p1,p2,p3,p4,p5,p6,p7,p8,p9,p10};
     
 
 
@@ -184,7 +226,7 @@ int main() {
         Tenant t4= Tenant("user4", "pass4", "ID4", "Eve Wilson", "eve@example.com", 1111111111, "Lakefront", 220000, 2, "Individual");
         Tenant t5= Tenant("user5", "pass5", "ID5", "Grace Brown", "grace@example.com", 4444444444, "Seaside", 50000, 3, "Family");
 
-        Tenant tenants[5]={t1,t2,t3,t4,t5};
+        Tenant tenants[10]={t1,t2,t3,t4,t5};
         
 
 
@@ -196,8 +238,12 @@ int main() {
         std::cout << "Press 3 to display all owner profiles" << std::endl;
         std::cout << "Press 4 to display all tenant profiles" << std::endl;
         std::cout <<"Press 5 to display property image using property ID number"<<endl;
+        std::cout<< "Press 6 to add a new property"<<endl;
         std::cout << "Press 10 to exit the program" << std::endl;
+        
         cin>>choice;
+        //Property properties[10]; // Initialize your properties array
+        int propertyCount = 0; 
 
 
     if (choice == 1) {
@@ -229,7 +275,8 @@ int main() {
 
         for (int w = 0; w < 10; w++) {
             if (compareInquiry(tenants[i], properties[w])) {
-                properties[w].displayProperty();}
+                properties[w].displayProperty();
+                cout<<"Property ID ="<<w<<endl;}
 
 
     }
@@ -267,9 +314,9 @@ int main() {
 
     // Property number
     if (w == 1) {
-        system("start C:\\Users\\HP\\Desktop\\ppprojectpics\\society1.jpeg");
+        system("start C:\\Users\\HP\\Desktop\\ppprojectpics\\society1.jpeg");       //since images are displayed directly through system
     } else if (w == 2) {
-        system("start C:\\Users\\HP\\Desktop\\ppprojectpics\\society2.jpeg");
+        system("start C:\\Users\\HP\\Desktop\\ppprojectpics\\society2.jpeg");       //this functionality will not work 
     } else if (w == 3) {
         system("start C:\\Users\\HP\\Desktop\\ppprojectpics\\society3.jpeg");
     } else if (w == 4) {
@@ -289,8 +336,44 @@ int main() {
     }
 }
 
+else if (choice == 6) {
+    if (propertyCount < 20) {  // Check if the propertyCount is less than array size 
+        Property newProperty;
 
-        }
+        cout << "Enter number of rooms: ";
+        cin >> newProperty.no_rooms;
+        cout << "Enter number of bathrooms: ";
+        cin >> newProperty.no_bathrooms;
+        cout << "Enter name of property: ";
+        cin.ignore();
+        getline(cin, newProperty.name);
+        cout << "Enter location of property: ";
+        getline(cin, newProperty.location);
+        cout << "Enter price of property: ";
+        cin >> newProperty.price;
+        cout << "Enter facing of property: ";
+        cin.ignore();
+        getline(cin, newProperty.facing);
+        cout << "Enter Property Type: ";
+        getline(cin, newProperty.property_type);
+        cout << "Enter Finishing: ";
+        getline(cin, newProperty.finishing);
+
+        properties[propertyCount] = newProperty;
+        propertyCount++;
+
+        cout << "New property has been added." << endl;
+    } else {
+        cout << "Property list is full. Cannot add more properties." << endl;
+    }
+}
+
+
+    }
+
+
+
+
 
 
     return 0;
